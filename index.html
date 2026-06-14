@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Natural Gardeners Club — Brand Discovery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #eef3ee;
+      color: #1a1a1a;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    /* ── Progress bar ── */
+    #progressWrap {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: #c8dfc8;
+      z-index: 200;
+    }
+    #progressBar {
+      height: 100%;
+      background: #2d6a4f;
+      width: 0%;
+      transition: width 0.45s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Header ── */
+    .hero {
+      background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 60%, #40916c 100%);
+      color: #fff;
+      padding: 52px 24px 44px;
+      text-align: center;
+    }
+    .hero-leaf { font-size: 48px; line-height: 1; margin-bottom: 12px; }
+    .hero h1  { font-size: clamp(22px, 5vw, 32px); font-weight: 600; letter-spacing: -.3px; }
+    .hero p   { margin-top: 8px; font-size: 15px; opacity: .82; max-width: 480px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+
+    /* ── Layout ── */
+    .container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+
+    /* ── Sections ── */
+    .form-section { display: none; animation: fadeIn .3s ease; }
+    .form-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .section-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+    .section-head {
+      background: #2d6a4f;
+      color: #fff;
+      padding: 20px 24px;
+    }
+    .section-head .label { font-size: 12px; font-weight: 500; opacity: .7; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; }
+    .section-head h2 { font-size: 18px; font-weight: 500; }
+
+    /* ── Question cards ── */
+    .q-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      padding: 22px 24px;
+      margin-top: 12px;
+    }
+    .q-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: #111;
+      line-height: 1.5;
+      margin-bottom: 4px;
+    }
+    .q-label .req { color: #b94040; }
+    .q-hint {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 14px;
+      line-height: 1.55;
+    }
+
+    /* ── Inputs ── */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+      width: 100%;
+      border: none;
+      border-bottom: 1.5px solid #ddd;
+      padding: 8px 2px;
+      font-size: 15px;
+      font-family: inherit;
+      color: #1a1a1a;
+      background: transparent;
+      outline: none;
+      transition: border-color .2s;
+      margin-top: 6px;
+    }
+    input:focus, textarea:focus { border-bottom-color: #2d6a4f; }
+    textarea { resize: vertical; min-height: 88px; }
+
+    /* ── Options ── */
+    .options { margin-top: 4px; }
+    .opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 6px;
+      cursor: pointer;
+      border-radius: 6px;
+      margin: 0 -6px;
+      transition: background .15s;
+    }
+    .opt:hover { background: #f6faf6; }
+    .opt input[type="radio"],
+    .opt input[type="checkbox"] {
+      width: 18px; height: 18px;
+      accent-color: #2d6a4f;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .opt label { font-size: 15px; color: #333; cursor: pointer; line-height: 1.4; }
+
+    /* ── Grid ── */
+    .grid-wrap { overflow-x: auto; margin-top: 12px; }
+    table.grid {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 480px;
+    }
+    table.grid th {
+      padding: 8px 10px;
+      text-align: center;
+      color: #555;
+      font-weight: 500;
+      border-bottom: 1.5px solid #eee;
+    }
+    table.grid th:first-child { text-align: left; }
+    table.grid td {
+      padding: 10px 10px;
+      text-align: center;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    table.grid td:first-child { text-align: left; color: #333; }
+    table.grid tr:hover td { background: #f7fbf7; }
+    table.grid input[type="radio"] { width: 16px; height: 16px; accent-color: #2d6a4f; cursor: pointer; }
+
+    /* ── Navigation ── */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      padding: 0 2px;
+    }
+    .step-txt { font-size: 13px; color: #888; }
+
+    .btn {
+      padding: 11px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .18s, transform .1s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn-primary { background: #2d6a4f; color: #fff; }
+    .btn-primary:hover { background: #1e4d38; }
+    .btn-ghost  { background: transparent; color: #2d6a4f; }
+    .btn-ghost:hover  { background: #edf5ef; }
+    .btn-submit { background: #1b4332; color: #fff; }
+    .btn-submit:hover { background: #132f24; }
+    .btn-csv { background: #52b788; color: #fff; margin-top: 28px; }
+    .btn-csv:hover { background: #40916c; }
+    .btn-clear { background: transparent; color: #999; border: 1px solid #ddd; margin-top: 12px; font-size: 13px; padding: 8px 18px; }
+    .btn-clear:hover { color: #555; border-color: #bbb; }
+
+    /* ── Thank you ── */
+    #thankyou {
+      display: none;
+      text-align: center;
+      padding: 64px 20px;
+      animation: fadeIn .4s ease;
+    }
+    #thankyou.active { display: block; }
+    .ty-leaf { font-size: 72px; margin-bottom: 20px; }
+    #thankyou h2 { font-size: 28px; font-weight: 600; color: #1b4332; margin-bottom: 16px; }
+    #thankyou p  { font-size: 16px; color: #555; line-height: 1.75; max-width: 500px; margin: 0 auto; }
+
+    .response-count {
+      display: inline-block;
+      margin-top: 24px;
+      background: #eef7f2;
+      color: #2d6a4f;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 20px;
+    }
+
+    .csv-section {
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid #e0e0e0;
+    }
+    .csv-section h3 { font-size: 16px; font-weight: 600; color: #1b4332; margin-bottom: 6px; }
+    .csv-section p  { font-size: 13.5px; color: #777; margin-bottom: 4px; }
+
+    @media (max-width: 420px) {
+      .hero { padding: 40px 16px 36px; }
+      .q-card, .section-head { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progressWrap"><div id="progressBar"></div></div>
+
+<div class="hero">
+  <div class="hero-leaf">🌿</div>
+  <h1>Natural Gardeners Club</h1>
+  <p>Help us shape the future look, feel and personality of the club.</p>
+</div>
+
+<div class="container">
+  <form id="mainForm" novalidate>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 1 — About the Club
+    ════════════════════════════════════════ -->
+    <div class="form-section active" id="s1">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 1 of 7</div>
+          <h2>About the Club</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">1. What is the name of your gardening club? <span class="req">*</span></div>
+        <input type="text" name="club_name" placeholder="Your answer" />
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">2. How would you describe the club in one sentence?</div>
+        <div class="q-hint">e.g. "A welcoming community space where children and families learn to grow together."</div>
+        <textarea name="club_description" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">3. Why was the club started?</div>
+        <textarea name="club_origin" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">4. What makes your club special?</div>
+        <textarea name="club_special" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">5. What activities does the club currently offer?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="a1" name="activities" value="Gardening workshops"><label for="a1">Gardening workshops</label></div>
+          <div class="opt"><input type="checkbox" id="a2" name="activities" value="Seed planting"><label for="a2">Seed planting</label></div>
+          <div class="opt"><input type="checkbox" id="a3" name="activities" value="Food growing"><label for="a3">Food growing</label></div>
+          <div class="opt"><input type="checkbox" id="a4" name="activities" value="Nature education"><label for="a4">Nature education</label></div>
+          <div class="opt"><input type="checkbox" id="a5" name="activities" value="Family activities"><label for="a5">Family activities</label></div>
+          <div class="opt"><input type="checkbox" id="a6" name="activities" value="School partnerships"><label for="a6">School partnerships</label></div>
+          <div class="opt"><input type="checkbox" id="a7" name="activities" value="Seasonal events"><label for="a7">Seasonal events</label></div>
+          <div class="opt"><input type="checkbox" id="a8" name="activities" value="Community volunteering"><label for="a8">Community volunteering</label></div>
+          <div class="opt"><input type="checkbox" id="a9" name="activities" value="Wildlife &amp; pollinator projects"><label for="a9">Wildlife &amp; pollinator projects</label></div>
+          <div class="opt"><input type="checkbox" id="a10" name="activities" value="Arts &amp; crafts"><label for="a10">Arts &amp; crafts</label></div>
+          <div class="opt"><input type="checkbox" id="a11" name="activities" value="Outdoor learning"><label for="a11">Outdoor learning</label></div>
+          <div class="opt"><input type="checkbox" id="a12" name="activities" value="Other"><label for="a12">Other</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 2 — Audience & Community
+    ════════════════════════════════════════ -->
+    <div class="form-section" id="s2">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 2 of 7</div>
+          <h2>Audience &amp; Community</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">6. Who is the club mainly for?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="b1" name="audience" value="Young children (3-6)"><label for="b1">Young children (3–6)</label></div>
+          <div class="opt"><input type="checkbox" id="b2" name="audience" value="Children (7-12)"><label for="b2">Children (7–12)</label></div>
+          <div class="opt"><input type="checkbox" id="b3" name="audience" value="Teenagers"><label for="b3">Teenagers</label></div>
+          <div class="opt"><input type="checkbox" id="b4" name="audience" value="Parents and families"><label for="b4">Parents &amp; families</label></div>
+          <div class="opt"><input type="checkbox" id="b5" name="audience" value="Schools"><label for="b5">Schools</label></div>
+          <div class="opt"><input type="checkbox" id="b6" name="audience" value="Local community"><label for="b6">Local community</label></div>
+          <div class="opt"><input type="checkbox" id="b7" name="audience" value="Volunteers"><label for="b7">Volunteers</label></div>
+          <div class="opt"><input type="checkbox" id="b8" name="audience" value="Older adults"><label for="b8">Older adults</label></div>
+          <div class="opt"><input type="checkbox" id="b9" name="audience" value="Beginner gardeners"><label for="b9">Beginner gardeners</label></div>
+          <div class="opt"><input type="checkbox" id="b10" name="audience" value="Experienced gardeners"><label for="b10">Experienced gardeners</label></div>
+          <div class="opt"><input type="checkbox" id="b11" name="audience" value="Everyone"><label for="b11">Everyone</label></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">7. What do you hope people feel when they interact with the club?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="c1" name="feelings" value="Welcome"><label for="c1">Welcome</label></div>
+          <div class="opt"><input type="checkbox" id="c2" name="feelings" value="Calm"><label for="c2">Calm</label></div>
+          <div class="opt"><input type="checkbox" id="c3" name="feelings" value="Inspired"><label for="c3">Inspired</label></div>
+          <div class="opt"><input type="checkbox" id="c4" name="feelings" value="Curious"><label for="c4">Curious</label></div>
+          <div class="opt"><input type="checkbox" id="c5" name="feelings" value="Connected"><label for="c5">Connected</label></div>
+          <div class="opt"><input type="checkbox" id="c6" name="feelings" value="Creative"><label for="c6">Creative</label></div>
+          <div class="opt"><input type="checkbox" id="c7" name="feelings" value="Happy"><label for="c7">Happy</label></div>
+          <div class="opt"><input type="checkbox" id="c8" name="feelings" value="Safe"><label for="c8">Safe</label></div>
+          <div class="opt"><input type="checkbox" id="c9" name="feelings" value="Empowered"><label for="c9">Empowered</label></div>
+          <div class="opt"><input type="checkbox" id="c10" name="feelings" value="Included"><label for="c10">Included</label></div>
+          <div class="opt"><input type="checkbox" id="c11" name="feelings" value="Excited to learn"><label for="c11">Excited to learn</label></div>
+          <div class="opt"><input type="checkbox" id="c12" name="feelings" value="Other"><label for="c12">Other</label></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">8. What values are most important to the club?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="d1" name="values" value="Nature"><label for="d1">Nature</label></div>
+          <div class="opt"><input type="checkbox" id="d2" name="values" value="Community"><label for="d2">Community</label></div>
+          <div class="opt"><input type="checkbox" id="d3" name="values" value="Learning"><label for="d3">Learning</label></div>
+          <div class="opt"><input type="checkbox" id="d4" name="values" value="Sustainability"><label for="d4">Sustainability</label></div>
+          <div class="opt"><input type="checkbox" id="d5" name="values" value="Accessibility"><label for="d5">Accessibility</label></div>
+          <div class="opt"><input type="checkbox" id="d6" name="values" value="Kindness"><label for="d6">Kindness</label></div>
+          <div class="opt"><input type="checkbox" id="d7" name="values" value="Creativity"><label for="d7">Creativity</label></div>
+          <div class="opt"><input type="checkbox" id="d8" name="values" value="Inclusion"><label for="d8">Inclusion</label></div>
+          <div class="opt"><input type="checkbox" id="d9" name="values" value="Wellbeing"><label for="d9">Wellbeing</label></div>
+          <div class="opt"><input type="checkbox" id="d10" name="values" value="Fun"><label for="d10">Fun</label></div>
+          <div class="opt"><input type="checkbox" id="d11" name="values" value="Environmental awareness"><label for="d11">Environmental awareness</label></div>
+          <div class="opt"><input type="checkbox" id="d12" name="values" value="Seasonal living"><label for="d12">Seasonal living</label></div>
+          <div class="opt"><input type="checkbox" id="d13" name="values" value="Other"><label for="d13">Other</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 3 — Personality & Style
+    ════════════════════════════════════════ -->
+    <div class="form-section" id="s3">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 3 of 7</div>
+          <h2>Personality &amp; Style</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">9. If the club were a person, how would you describe them?</div>
+        <div class="q-hint">e.g. "Friendly, creative, patient, knowledgeable, joyful, outdoorsy."</div>
+        <textarea name="personality" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">10. Which words best describe the style you want the club to have?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="e1" name="style_words" value="Natural"><label for="e1">Natural</label></div>
+          <div class="opt"><input type="checkbox" id="e2" name="style_words" value="Colourful"><label for="e2">Colourful</label></div>
+          <div class="opt"><input type="checkbox" id="e3" name="style_words" value="Calm"><label for="e3">Calm</label></div>
+          <div class="opt"><input type="checkbox" id="e4" name="style_words" value="Playful"><label for="e4">Playful</label></div>
+          <div class="opt"><input type="checkbox" id="e5" name="style_words" value="Educational"><label for="e5">Educational</label></div>
+          <div class="opt"><input type="checkbox" id="e6" name="style_words" value="Modern"><label for="e6">Modern</label></div>
+          <div class="opt"><input type="checkbox" id="e7" name="style_words" value="Handmade"><label for="e7">Handmade</label></div>
+          <div class="opt"><input type="checkbox" id="e8" name="style_words" value="Friendly"><label for="e8">Friendly</label></div>
+          <div class="opt"><input type="checkbox" id="e9" name="style_words" value="Organic"><label for="e9">Organic</label></div>
+          <div class="opt"><input type="checkbox" id="e10" name="style_words" value="Creative"><label for="e10">Creative</label></div>
+          <div class="opt"><input type="checkbox" id="e11" name="style_words" value="Community-focused"><label for="e11">Community-focused</label></div>
+          <div class="opt"><input type="checkbox" id="e12" name="style_words" value="Rustic"><label for="e12">Rustic</label></div>
+          <div class="opt"><input type="checkbox" id="e13" name="style_words" value="Bright"><label for="e13">Bright</label></div>
+          <div class="opt"><input type="checkbox" id="e14" name="style_words" value="Minimal"><label for="e14">Minimal</label></div>
+          <div class="opt"><input type="checkbox" id="e15" name="style_words" value="Whimsical"><label for="e15">Whimsical</label></div>
+          <div class="opt"><input type="checkbox" id="e16" name="style_words" value="Premium"><label for="e16">Premium</label></div>
+          <div class="opt"><input type="checkbox" id="e17" name="style_words" value="Other"><label for="e17">Other</label></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">11. Which visual styles do you naturally prefer?</div>
+        <div class="q-hint">Select one option per row.</div>
+        <div class="grid-wrap">
+          <table class="grid">
+            <thead>
+              <tr>
+                <th style="min-width:160px"></th>
+                <th>Love it</th>
+                <th>Like it</th>
+                <th>Neutral</th>
+                <th>Not for us</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Botanical illustration</td>      <td><input type="radio" name="vs_botanical"  value="Love it"></td><td><input type="radio" name="vs_botanical"  value="Like it"></td><td><input type="radio" name="vs_botanical"  value="Neutral"></td><td><input type="radio" name="vs_botanical"  value="Not for us"></td></tr>
+              <tr><td>Bright floral colours</td>       <td><input type="radio" name="vs_floral"     value="Love it"></td><td><input type="radio" name="vs_floral"     value="Like it"></td><td><input type="radio" name="vs_floral"     value="Neutral"></td><td><input type="radio" name="vs_floral"     value="Not for us"></td></tr>
+              <tr><td>Minimal modern design</td>       <td><input type="radio" name="vs_minimal"    value="Love it"></td><td><input type="radio" name="vs_minimal"    value="Like it"></td><td><input type="radio" name="vs_minimal"    value="Neutral"></td><td><input type="radio" name="vs_minimal"    value="Not for us"></td></tr>
+              <tr><td>Hand-drawn elements</td>         <td><input type="radio" name="vs_handdrawn"  value="Love it"></td><td><input type="radio" name="vs_handdrawn"  value="Like it"></td><td><input type="radio" name="vs_handdrawn"  value="Neutral"></td><td><input type="radio" name="vs_handdrawn"  value="Not for us"></td></tr>
+              <tr><td>Nature photography</td>          <td><input type="radio" name="vs_photo"      value="Love it"></td><td><input type="radio" name="vs_photo"      value="Like it"></td><td><input type="radio" name="vs_photo"      value="Neutral"></td><td><input type="radio" name="vs_photo"      value="Not for us"></td></tr>
+              <tr><td>Vintage gardening aesthetics</td><td><input type="radio" name="vs_vintage"    value="Love it"></td><td><input type="radio" name="vs_vintage"    value="Like it"></td><td><input type="radio" name="vs_vintage"    value="Neutral"></td><td><input type="radio" name="vs_vintage"    value="Not for us"></td></tr>
+              <tr><td>Clean editorial layouts</td>     <td><input type="radio" name="vs_editorial"  value="Love it"></td><td><input type="radio" name="vs_editorial"  value="Like it"></td><td><input type="radio" name="vs_editorial"  value="Neutral"></td><td><input type="radio" name="vs_editorial"  value="Not for us"></td></tr>
+              <tr><td>Child-friendly graphics</td>     <td><input type="radio" name="vs_child"      value="Love it"></td><td><input type="radio" name="vs_child"      value="Like it"></td><td><input type="radio" name="vs_child"      value="Neutral"></td><td><input type="radio" name="vs_child"      value="Not for us"></td></tr>
+              <tr><td>Soft earthy colours</td>         <td><input type="radio" name="vs_earthy"     value="Love it"></td><td><input type="radio" name="vs_earthy"     value="Like it"></td><td><input type="radio" name="vs_earthy"     value="Neutral"></td><td><input type="radio" name="vs_earthy"     value="Not for us"></td></tr>
+              <tr><td>Bold vibrant colours</td>        <td><input type="radio" name="vs_bold"       value="Love it"></td><td><input type="radio" name="vs_bold"       value="Like it"></td><td><input type="radio" name="vs_bold"       value="Neutral"></td><td><input type="radio" name="vs_bold"       value="Not for us"></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 4 — Colours & Visual Identity
+    ════════════════════════════════════════ -->
+    <div class="form-section" id="s4">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 4 of 7</div>
+          <h2>Colours &amp; Visual Identity</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">12. Which colours feel right for the club?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="f1" name="colours" value="Greens"><label for="f1">Greens</label></div>
+          <div class="opt"><input type="checkbox" id="f2" name="colours" value="Bright flower colours"><label for="f2">Bright flower colours</label></div>
+          <div class="opt"><input type="checkbox" id="f3" name="colours" value="Earthy browns"><label for="f3">Earthy browns</label></div>
+          <div class="opt"><input type="checkbox" id="f4" name="colours" value="Cream / off-white"><label for="f4">Cream / off-white</label></div>
+          <div class="opt"><input type="checkbox" id="f5" name="colours" value="Warm yellows"><label for="f5">Warm yellows</label></div>
+          <div class="opt"><input type="checkbox" id="f6" name="colours" value="Pinks"><label for="f6">Pinks</label></div>
+          <div class="opt"><input type="checkbox" id="f7" name="colours" value="Orange / terracotta"><label for="f7">Orange / terracotta</label></div>
+          <div class="opt"><input type="checkbox" id="f8" name="colours" value="Lavender / purple"><label for="f8">Lavender / purple</label></div>
+          <div class="opt"><input type="checkbox" id="f9" name="colours" value="Deep forest tones"><label for="f9">Deep forest tones</label></div>
+          <div class="opt"><input type="checkbox" id="f10" name="colours" value="Soft pastel colours"><label for="f10">Soft pastel colours</label></div>
+          <div class="opt"><input type="checkbox" id="f11" name="colours" value="Other"><label for="f11">Other</label></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">13. Are there any colours or styles you definitely want to avoid?</div>
+        <textarea name="colours_avoid" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">14. What type of logo feels most appropriate?</div>
+        <div class="options">
+          <div class="opt"><input type="radio" id="g1" name="logo_type" value="Simple and modern"><label for="g1">Simple &amp; modern</label></div>
+          <div class="opt"><input type="radio" id="g2" name="logo_type" value="Botanical and illustrated"><label for="g2">Botanical &amp; illustrated</label></div>
+          <div class="opt"><input type="radio" id="g3" name="logo_type" value="Friendly and playful"><label for="g3">Friendly &amp; playful</label></div>
+          <div class="opt"><input type="radio" id="g4" name="logo_type" value="Elegant and timeless"><label for="g4">Elegant &amp; timeless</label></div>
+          <div class="opt"><input type="radio" id="g5" name="logo_type" value="Handcrafted"><label for="g5">Handcrafted</label></div>
+          <div class="opt"><input type="radio" id="g6" name="logo_type" value="Badge / emblem style"><label for="g6">Badge / emblem style</label></div>
+          <div class="opt"><input type="radio" id="g7" name="logo_type" value="Minimal symbol"><label for="g7">Minimal symbol</label></div>
+          <div class="opt"><input type="radio" id="g8" name="logo_type" value="Unsure"><label for="g8">Unsure</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 5 — Social Media & Communication
+    ════════════════════════════════════════ -->
+    <div class="form-section" id="s5">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 5 of 7</div>
+          <h2>Social Media &amp; Communication</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">15. Where will the brand mostly appear?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="h1" name="brand_appear" value="Instagram"><label for="h1">Instagram</label></div>
+          <div class="opt"><input type="checkbox" id="h2" name="brand_appear" value="Facebook"><label for="h2">Facebook</label></div>
+          <div class="opt"><input type="checkbox" id="h3" name="brand_appear" value="Posters and flyers"><label for="h3">Posters &amp; flyers</label></div>
+          <div class="opt"><input type="checkbox" id="h4" name="brand_appear" value="Community boards"><label for="h4">Community boards</label></div>
+          <div class="opt"><input type="checkbox" id="h5" name="brand_appear" value="Website"><label for="h5">Website</label></div>
+          <div class="opt"><input type="checkbox" id="h6" name="brand_appear" value="Signage"><label for="h6">Signage</label></div>
+          <div class="opt"><input type="checkbox" id="h7" name="brand_appear" value="Aprons / uniforms"><label for="h7">Aprons / uniforms</label></div>
+          <div class="opt"><input type="checkbox" id="h8" name="brand_appear" value="Seed packets"><label for="h8">Seed packets</label></div>
+          <div class="opt"><input type="checkbox" id="h9" name="brand_appear" value="Workshops"><label for="h9">Workshops</label></div>
+          <div class="opt"><input type="checkbox" id="h10" name="brand_appear" value="Tote bags and merch"><label for="h10">Tote bags &amp; merch</label></div>
+          <div class="opt"><input type="checkbox" id="h11" name="brand_appear" value="School materials"><label for="h11">School materials</label></div>
+          <div class="opt"><input type="checkbox" id="h12" name="brand_appear" value="Event banners"><label for="h12">Event banners</label></div>
+          <div class="opt"><input type="checkbox" id="h13" name="brand_appear" value="Other"><label for="h13">Other</label></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">16. What type of social media content would you like to share?</div>
+        <div class="options">
+          <div class="opt"><input type="checkbox" id="i1" name="content_type" value="Gardening tips"><label for="i1">Gardening tips</label></div>
+          <div class="opt"><input type="checkbox" id="i2" name="content_type" value="Childrens activities"><label for="i2">Children's activities</label></div>
+          <div class="opt"><input type="checkbox" id="i3" name="content_type" value="Seasonal updates"><label for="i3">Seasonal updates</label></div>
+          <div class="opt"><input type="checkbox" id="i4" name="content_type" value="Flower and plant photography"><label for="i4">Flower &amp; plant photography</label></div>
+          <div class="opt"><input type="checkbox" id="i5" name="content_type" value="Harvests"><label for="i5">Harvests</label></div>
+          <div class="opt"><input type="checkbox" id="i6" name="content_type" value="Educational content"><label for="i6">Educational content</label></div>
+          <div class="opt"><input type="checkbox" id="i7" name="content_type" value="Community stories"><label for="i7">Community stories</label></div>
+          <div class="opt"><input type="checkbox" id="i8" name="content_type" value="Workshop promotion"><label for="i8">Workshop promotion</label></div>
+          <div class="opt"><input type="checkbox" id="i9" name="content_type" value="Wildlife and pollinators"><label for="i9">Wildlife &amp; pollinators</label></div>
+          <div class="opt"><input type="checkbox" id="i10" name="content_type" value="Recipes"><label for="i10">Recipes</label></div>
+          <div class="opt"><input type="checkbox" id="i11" name="content_type" value="Before and after projects"><label for="i11">Before &amp; after projects</label></div>
+          <div class="opt"><input type="checkbox" id="i12" name="content_type" value="Volunteer moments"><label for="i12">Volunteer moments</label></div>
+          <div class="opt"><input type="checkbox" id="i13" name="content_type" value="Other"><label for="i13">Other</label></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 6 — Inspiration
+    ════════════════════════════════════════ -->
+    <div class="form-section" id="s6">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 6 of 7</div>
+          <h2>Inspiration</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">17. Are there any brands, clubs, gardens or Instagram accounts you love?</div>
+        <textarea name="inspo_brands" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">18. What do you like about them?</div>
+        <textarea name="inspo_like" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">19. Share any inspiration — images, links, colours or ideas</div>
+        <div class="q-hint">Paste links to images, Pinterest boards, websites, or describe what you have in mind.</div>
+        <textarea name="inspo_links" placeholder="e.g. https://pinterest.com/... or describe your vision"></textarea>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         SECTION 7 — Future Vision
+    ════════════════════════════════════════ -->
+    <div class="form-section" id="s7">
+      <div class="section-card">
+        <div class="section-head">
+          <div class="label">Section 7 of 7</div>
+          <h2>Future Vision</h2>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">20. Where would you love the club to be in 3 years?</div>
+        <textarea name="vision_3yr" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">21. What would success look like for the club?</div>
+        <textarea name="vision_success" placeholder="Your answer"></textarea>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">22. Is there anything else you'd love the brand to communicate?</div>
+        <textarea name="vision_extra" placeholder="Your answer"></textarea>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- ── Thank you ── -->
+  <div id="thankyou">
+    <div class="ty-leaf">🌱</div>
+    <h2>Thank You</h2>
+    <p>
+      Thank you for helping shape the future of Natural Gardeners Club.<br><br>
+      Your answers will help create a welcoming, joyful and community-driven
+      identity that reflects the spirit of the club and the people who grow
+      it together.
+    </p>
+    <div id="sheetStatus" style="margin-top:20px;font-size:14px;color:#555;"></div>
+
+    <div class="csv-section">
+      <h3>Local backup</h3>
+      <p>Your answers were sent to the Google Sheet and also saved in this browser as a backup.</p>
+      <br>
+      <button class="btn btn-csv" onclick="downloadCSV()">⬇ Download backup as CSV</button>
+      <br>
+      <button class="btn btn-clear" onclick="clearResponses()">Clear local backup</button>
+    </div>
+  </div>
+
+  <!-- ── Navigation ── -->
+  <div class="nav" id="navBar">
+    <button class="btn btn-ghost" id="btnBack" onclick="go(-1)" style="visibility:hidden">← Back</button>
+    <span class="step-txt" id="stepTxt">Step 1 of 7</span>
+    <button class="btn btn-primary" id="btnNext" onclick="go(1)">Next →</button>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── Google Sheets endpoint ──────────────────────────────
+// Paste your Apps Script web app URL here after deploying Code.gs
+var SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// ── State ──────────────────────────────────────────────
+var cur = 1;
+var TOTAL = 7;
+var STORAGE_KEY = 'ngc_responses';
+
+// ── Column headers for CSV ─────────────────────────────
+var HEADERS = [
+  'Timestamp',
+  'Q1 Club name',
+  'Q2 One sentence description',
+  'Q3 Why club was started',
+  'Q4 What makes club special',
+  'Q5 Activities offered',
+  'Q6 Who club is for',
+  'Q7 Feelings when interacting',
+  'Q8 Club values',
+  'Q9 Club personality',
+  'Q10 Style words',
+  'Q11 Botanical illustration',
+  'Q11 Bright floral colours',
+  'Q11 Minimal modern design',
+  'Q11 Hand-drawn elements',
+  'Q11 Nature photography',
+  'Q11 Vintage gardening aesthetics',
+  'Q11 Clean editorial layouts',
+  'Q11 Child-friendly graphics',
+  'Q11 Soft earthy colours',
+  'Q11 Bold vibrant colours',
+  'Q12 Colour preferences',
+  'Q13 Colours to avoid',
+  'Q14 Logo style',
+  'Q15 Brand appearances',
+  'Q16 Social media content',
+  'Q17 Brands / accounts loved',
+  'Q18 What they like about them',
+  'Q19 Inspiration links',
+  'Q20 Vision in 3 years',
+  'Q21 What success looks like',
+  'Q22 Anything else to communicate'
+];
+
+// ── Collect form values ────────────────────────────────
+function collectResponse() {
+  var f = document.getElementById('mainForm');
+
+  function val(name) {
+    var el = f.querySelector('[name="' + name + '"]');
+    return el ? el.value.trim() : '';
+  }
+
+  function checks(name) {
+    return Array.from(f.querySelectorAll('[name="' + name + '"]:checked'))
+      .map(function(el){ return el.value; }).join(' | ');
+  }
+
+  function radio(name) {
+    var el = f.querySelector('[name="' + name + '"]:checked');
+    return el ? el.value : '';
+  }
+
+  return [
+    new Date().toISOString(),
+    val('club_name'),
+    val('club_description'),
+    val('club_origin'),
+    val('club_special'),
+    checks('activities'),
+    checks('audience'),
+    checks('feelings'),
+    checks('values'),
+    val('personality'),
+    checks('style_words'),
+    radio('vs_botanical'),
+    radio('vs_floral'),
+    radio('vs_minimal'),
+    radio('vs_handdrawn'),
+    radio('vs_photo'),
+    radio('vs_vintage'),
+    radio('vs_editorial'),
+    radio('vs_child'),
+    radio('vs_earthy'),
+    radio('vs_bold'),
+    checks('colours'),
+    val('colours_avoid'),
+    radio('logo_type'),
+    checks('brand_appear'),
+    checks('content_type'),
+    val('inspo_brands'),
+    val('inspo_like'),
+    val('inspo_links'),
+    val('vision_3yr'),
+    val('vision_success'),
+    val('vision_extra')
+  ];
+}
+
+// ── CSV helpers ────────────────────────────────────────
+function escapeCell(v) {
+  var s = String(v == null ? '' : v);
+  if (s.indexOf(',') >= 0 || s.indexOf('"') >= 0 || s.indexOf('\n') >= 0) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+function rowToCSV(arr) {
+  return arr.map(escapeCell).join(',');
+}
+
+// ── localStorage helpers ───────────────────────────────
+function loadResponses() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  } catch(e) { return []; }
+}
+
+function saveResponse(row) {
+  var all = loadResponses();
+  all.push(row);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+  return all.length;
+}
+
+function clearResponses() {
+  if (confirm('Delete all ' + loadResponses().length + ' saved response(s)?')) {
+    localStorage.removeItem(STORAGE_KEY);
+    updateResponseCount();
+  }
+}
+
+function updateResponseCount() {
+  var n = loadResponses().length;
+  var el = document.getElementById('responseCount');
+  if (el) el.textContent = n === 0 ? 'No responses saved yet'
+                          : n === 1 ? '1 response saved'
+                          : n + ' responses saved';
+}
+
+// ── Download CSV ───────────────────────────────────────
+function downloadCSV() {
+  var all = loadResponses();
+  if (!all.length) { alert('No responses saved yet.'); return; }
+  var lines = [rowToCSV(HEADERS)];
+  all.forEach(function(r){ lines.push(rowToCSV(r)); });
+  var blob = new Blob([lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'ngc-brand-discovery-responses.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ── Post to Google Sheet ────────────────────────────────
+function postToSheet(row) {
+  var statusEl = document.getElementById('sheetStatus');
+  if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    statusEl.textContent = '(Google Sheet not connected — see setup instructions.)';
+    return;
+  }
+  statusEl.textContent = 'Sending to Google Sheet…';
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(row)
+  })
+  .then(function() {
+    statusEl.style.color = '#2d6a4f';
+    statusEl.textContent = '✓ Response saved to Google Sheet.';
+  })
+  .catch(function() {
+    statusEl.style.color = '#b94040';
+    statusEl.textContent = 'Could not reach Google Sheet — your backup CSV still has your answers.';
+  });
+}
+
+// ── Navigation ─────────────────────────────────────────
+function go(dir) {
+  var next = cur + dir;
+  if (next < 1 || next > TOTAL + 1) return;
+
+  if (dir > 0 && cur === 1) {
+    var nameEl = document.querySelector('[name="club_name"]');
+    if (!nameEl.value.trim()) {
+      nameEl.focus();
+      nameEl.style.borderBottomColor = '#b94040';
+      setTimeout(function(){ nameEl.style.borderBottomColor = ''; }, 1800);
+      return;
+    }
+  }
+
+  if (cur <= TOTAL) document.getElementById('s' + cur).classList.remove('active');
+  cur = next;
+
+  if (cur > TOTAL) {
+    // Save locally and send to Google Sheet
+    var row = collectResponse();
+    saveResponse(row);
+    postToSheet(row);
+    document.getElementById('thankyou').classList.add('active');
+    document.getElementById('navBar').style.display = 'none';
+    document.getElementById('progressBar').style.width = '100%';
+  } else {
+    document.getElementById('s' + cur).classList.add('active');
+    updateNav();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function updateNav() {
+  var pct = Math.round((cur / (TOTAL + 1)) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('stepTxt').textContent = 'Step ' + cur + ' of ' + TOTAL;
+  document.getElementById('btnBack').style.visibility = cur > 1 ? 'visible' : 'hidden';
+  var btn = document.getElementById('btnNext');
+  if (cur === TOTAL) {
+    btn.textContent = 'Submit ✓';
+    btn.className = 'btn btn-submit';
+  } else {
+    btn.textContent = 'Next →';
+    btn.className = 'btn btn-primary';
+  }
+}
+
+updateNav();
+</script>
+</body>
+</html>
