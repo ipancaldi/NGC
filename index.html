@@ -591,16 +591,15 @@
       identity that reflects the spirit of the club and the people who grow
       it together.
     </p>
-    <span class="response-count" id="responseCount"></span>
+    <div id="sheetStatus" style="margin-top:20px;font-size:14px;color:#555;"></div>
 
     <div class="csv-section">
-      <h3>Download Responses</h3>
-      <p>All responses collected on this device are saved locally.</p>
-      <p>Download the CSV to open in Excel, Google Sheets, or Numbers.</p>
+      <h3>Local backup</h3>
+      <p>Your answers were sent to the Google Sheet and also saved in this browser as a backup.</p>
       <br>
-      <button class="btn btn-csv" onclick="downloadCSV()">⬇ Download responses as CSV</button>
+      <button class="btn btn-csv" onclick="downloadCSV()">⬇ Download backup as CSV</button>
       <br>
-      <button class="btn btn-clear" onclick="clearResponses()">Clear all saved responses</button>
+      <button class="btn btn-clear" onclick="clearResponses()">Clear local backup</button>
     </div>
   </div>
 
@@ -614,6 +613,10 @@
 </div><!-- /container -->
 
 <script>
+// ── Google Sheets endpoint ──────────────────────────────
+// Paste your Apps Script web app URL here after deploying Code.gs
+var SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
 // ── State ──────────────────────────────────────────────
 var cur = 1;
 var TOTAL = 7;
@@ -769,6 +772,30 @@ function downloadCSV() {
   URL.revokeObjectURL(url);
 }
 
+// ── Post to Google Sheet ────────────────────────────────
+function postToSheet(row) {
+  var statusEl = document.getElementById('sheetStatus');
+  if (!SCRIPT_URL || SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+    statusEl.textContent = '(Google Sheet not connected — see setup instructions.)';
+    return;
+  }
+  statusEl.textContent = 'Sending to Google Sheet…';
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(row)
+  })
+  .then(function() {
+    statusEl.style.color = '#2d6a4f';
+    statusEl.textContent = '✓ Response saved to Google Sheet.';
+  })
+  .catch(function() {
+    statusEl.style.color = '#b94040';
+    statusEl.textContent = 'Could not reach Google Sheet — your backup CSV still has your answers.';
+  });
+}
+
 // ── Navigation ─────────────────────────────────────────
 function go(dir) {
   var next = cur + dir;
@@ -788,13 +815,13 @@ function go(dir) {
   cur = next;
 
   if (cur > TOTAL) {
-    // Save and show thank-you
+    // Save locally and send to Google Sheet
     var row = collectResponse();
-    var total = saveResponse(row);
+    saveResponse(row);
+    postToSheet(row);
     document.getElementById('thankyou').classList.add('active');
     document.getElementById('navBar').style.display = 'none';
     document.getElementById('progressBar').style.width = '100%';
-    updateResponseCount();
   } else {
     document.getElementById('s' + cur).classList.add('active');
     updateNav();
